@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Databases</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        form input[type="text"],
+        form input[type="number"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Database Management</h1>
+    <form id="createDatabaseForm" action="create_database.jsp" method="post">
+        <label for="dbName">Database Name:</label>
+        <input type="text" id="dbName" name="dbName" required>
+        <button type="submit">Create</button>
+    </form>
+
+    <form id="deleteDatabaseForm" action="DeleteDatabaseServlet" method="post">
+        <label for="deleteDbName">Database Name:</label>
+        <select id="deleteDbName" name="dbName">
+            <!-- Dynamic options will be added here -->
+        </select>
+        <button type="submit">Delete</button>
+    </form>
+
+    <script>
+        // Function to populate the select dropdown with database names
+        function populateDatabaseNames() {
+            fetch("GetDatabaseNamesServlet") // Assuming you have a servlet to get database names
+                .then(response => response.json())
+                .then(data => {
+                    const selectElement = document.getElementById("deleteDbName");
+                    selectElement.innerHTML = "";
+                    data.forEach(dbName => {
+                        const option = document.createElement("option");
+                        option.value = dbName;
+                        option.textContent = dbName;
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching database names:", error);
+                });
+        }
+
+        // Call the function when the page loads
+        window.addEventListener("load", () => {
+            populateDatabaseNames();
+        });
+    </script>
+</body>
+</html>
